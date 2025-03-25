@@ -10,8 +10,8 @@
          flex-direction: column;
          align-items: center;
          justify-content: center;
-         height: 100vh;
          margin: 0;
+         padding: 20px;
          font-family: Arial, sans-serif;
       }
       p {
@@ -27,20 +27,23 @@
          text-decoration: underline;
       }
       img {
-         max-width: 100%;
-         height: auto;
+         max-width: 100%; /* Ensures the image scales down properly */
+         height: auto; /* Maintains the aspect ratio */
+         object-fit: contain; /* Ensures the whole image is visible without cropping */
       }
    </style>
 </head>
 <body>
    <p>
-      <a href="https://forms.gle/tsRoXZXsgcwiqcz89">Registration Form (I think we have a full line up, but can take back ups)</a>
+      <a href="https://forms.gle/tsRoXZXsgcwiqcz89">
+         Registration Form (I think we have a full line up, but can take back ups)
+      </a>
    </p>
    <p>
-      <img src="Symposium Map.png" alt="Map to the Studio" width="50%">
+      <img src="Symposium Map.png" alt="Map to the Studio">
    </p>
    <p> 
-      <img src="go_off_flyer.JPEG" alt="Event Flyer" width="75%">
+      <img src="go_off_flyer.JPEG" alt="Event Flyer">
    </p>
 </body>
 </html>
