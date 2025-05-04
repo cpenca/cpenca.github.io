@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Great Poets and Their Works</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      display: none;
+    }
+    .poet-name {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-top: 2rem;
+    }
+    .poem {
+      margin: 1rem 0;
+    }
+    .poem a {
+      font-weight: bold;
+      text-decoration: none;
+      color: darkblue;
+    }
+    .description {
+      font-style: italic;
+      color: gray;
+    }
+  </style>
+  <script>
+    const password = prompt("Enter password to view this site:");
+    if (password === "water") {
+      document.addEventListener("DOMContentLoaded", function () {
+        document.body.style.display = "block";
+      });
+    } else {
+      document.write("<h2>Access denied. Incorrect password.</h2>");
+    }
+  </script>
+</head>
+<body>
+  <h1>Great Poets and Their Works</h1>
+  <p>Welcome to a curated collection of renowned poets and their most impactful poems. Explore their lives and the pieces that shaped literature.</p>
+
+  <div class="poet">
+    <div class="poet-name">Emily Dickinson</div>
+    <p>Emily Dickinson was an American poet known for her unique style and introspective themes. She lived much of her life in reclusive isolation and wrote nearly 1,800 poems.</p>
+    
+    <div class="poem">
+      <a href="https://www.poetryfoundation.org/poems/47651/because-i-could-not-stop-for-death-479">Because I could not stop for Death</a>
+      <span class="description">— A haunting meditation on mortality and eternity.</span>
+    </div>
+    <div class="poem">
+      <a href="https://www.poetryfoundation.org/poems/44064/hope-is-the-thing-with-feathers-314">Hope is the thing with feathers</a>
+      <span class="description">— An uplifting metaphor for resilience and optimism.</span>
+    </div>
+  </div>
+
+  <!-- You can copy this block and change for more poets -->
+</body>
+</html>
