@@ -1,49 +1,608 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Event Page</title>
-   <style>
-      body {
-         display: flex;
-         flex-direction: column;
-         align-items: center;
-         justify-content: center;
-         margin: 0;
-         padding: 20px;
-         font-family: Arial, sans-serif;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#f5f5f7" />
+  <title>The 2nd International Symposium on Going Off</title>
+
+  <style>
+    :root{
+      --bg: #f5f5f7;
+      --panel: rgba(255,255,255,0.72);
+      --panel-strong: rgba(255,255,255,0.9);
+      --border: rgba(0,0,0,0.10);
+      --border-strong: rgba(0,0,0,0.16);
+      --text: rgba(0,0,0,0.88);
+      --muted: rgba(0,0,0,0.60);
+      --muted2: rgba(0,0,0,0.45);
+      --shadow: 0 18px 50px rgba(0,0,0,0.10);
+      --shadow2: 0 8px 20px rgba(0,0,0,0.10);
+      --radius: 18px;
+      --radius2: 14px;
+      --accent: #f5c84c; /* Notes-like warm accent */
+      --accent2:#ffe7a5;
+      --link: rgba(0,0,0,0.88);
+      --linkHover: rgba(0,0,0,1);
+      --paper: #fffef9;
+      --paperBorder: rgba(0,0,0,0.06);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%, #ffffff 0%, var(--bg) 55%, #efeff3 100%);
+    }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      justify-content:center;
+      padding: 28px 18px;
+    }
+
+    .app{
+      width:min(1100px, 100%);
+      min-height: 78vh;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+    }
+
+    /* Sidebar (Notes list vibe) */
+    .sidebar{
+      border-right: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(245,245,247,0.65));
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+
+    .traffic{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      user-select:none;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:999px;
+      border: 1px solid rgba(0,0,0,0.12);
+      background: rgba(255,255,255,0.7);
+    }
+    .dot.red{ background:#ff5f57; border-color: rgba(0,0,0,0.08); }
+    .dot.yellow{ background:#febc2e; border-color: rgba(0,0,0,0.08); }
+    .dot.green{ background:#28c840; border-color: rgba(0,0,0,0.08); }
+
+    .search{
+      margin-top: 6px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.8);
+      color: var(--muted);
+      font-size: 14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .search span{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.55;
+    }
+
+    .notesHeader{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      margin-top: 2px;
+    }
+    .notesHeader h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+    .pill{
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.06);
+      color: var(--muted);
+    }
+
+    .noteCard{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.75);
+      box-shadow: var(--shadow2);
+      padding: 14px 14px 12px 14px;
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+
+    .logo{
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--accent2), rgba(255,255,255,0.85));
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .logo img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .noteMeta{
+      min-width: 0;
+      flex:1;
+    }
+    .noteTitle{
+      font-weight: 760;
+      font-size: 14px;
+      margin: 1px 0 6px 0;
+      letter-spacing: -0.01em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .notePreview{
+      margin:0;
+      font-size: 13px;
+      line-height: 1.35;
+      color: var(--muted);
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+
+    .sidebarFooter{
+      margin-top:auto;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      color: var(--muted2);
+      font-size: 12px;
+    }
+
+    /* Main note */
+    .main{
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.60), rgba(245,245,247,0.55));
+    }
+
+    .paper{
+      height: 100%;
+      border-radius: 22px;
+      border: 1px solid var(--paperBorder);
+      background: linear-gradient(180deg, var(--paper), #ffffff);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+      padding: 26px 26px 24px 26px;
+      position:relative;
+    }
+
+    .titleRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+    }
+
+    h1{
+      margin:0 0 6px 0;
+      font-size: clamp(22px, 2.2vw, 34px);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+
+    .sub{
+      margin:0 0 18px 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .ctaRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      margin: 8px 0 18px 0;
+    }
+
+    .btn{
+      appearance:none;
+      border: 1px solid var(--border-strong);
+      background: rgba(255,255,255,0.75);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 650;
+      font-size: 14px;
+      color: var(--link);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .08s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{ background: rgba(255,255,255,0.92); border-color: rgba(0,0,0,0.22); color: var(--linkHover); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(180deg, var(--accent2), rgba(255,255,255,0.92));
+      border-color: rgba(0,0,0,0.14);
+    }
+
+    .section{
+      border-top: 1px dashed rgba(0,0,0,0.10);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+    .section h3{
+      margin:0 0 8px 0;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+      color: rgba(0,0,0,0.80);
+    }
+    .section p{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .kvs{
+      display:grid;
+      grid-template-columns: 140px 1fr;
+      gap: 10px 14px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .k{
+      color: rgba(0,0,0,0.70);
+      font-weight: 650;
+    }
+
+    .hint{
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top: 8px;
+      font-family: var(--mono);
+    }
+
+    /* Calendar menu */
+    .menuWrap{ position:relative; display:inline-block; }
+    .menu{
+      position:absolute;
+      top: 44px;
+      left: 0;
+      min-width: 240px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow2);
+      padding: 8px;
+      display:none;
+      z-index: 20;
+    }
+    .menu a{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding: 10px 10px;
+      border-radius: 12px;
+      text-decoration:none;
+      color: rgba(0,0,0,0.85);
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .menu a:hover{ background: rgba(0,0,0,0.06); }
+
+    /* Mobile */
+    @media (max-width: 880px){
+      .app{
+        grid-template-columns: 1fr;
       }
-      p {
-         margin: 20px 0;
-         text-align: center;
+      .sidebar{
+        display:none;
       }
-      a {
-         font-size: 1.2rem;
-         text-decoration: none;
-         color: #007BFF;
+      .main{
+        padding: 14px;
       }
-      a:hover {
-         text-decoration: underline;
+      .paper{
+        padding: 18px;
       }
-      img {
-         max-width: 100%; /* Ensures the image scales down properly */
-         height: auto; /* Maintains the aspect ratio */
-         object-fit: contain; /* Ensures the whole image is visible without cropping */
+      .kvs{
+        grid-template-columns: 120px 1fr;
       }
-   </style>
+    }
+  </style>
 </head>
+
 <body>
-   <p>
-      <a href="https://cpenca.github.io/go_off_agenda_march2025.pdf">
-         Agenda! Subject to Change. Don't get too attached. 
-      </a>
-   </p>
-   <p>
-      <img src="Symposium Map.png" alt="Map to the Studio">
-   </p>
-   <p> 
-      <img src="go_off_flyer.JPEG" alt="Event Flyer">
-   </p>
+  <div class="wrap">
+    <div class="app" role="application" aria-label="Notes-style event page">
+
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Notes list">
+        <div class="topbar">
+          <div class="traffic" aria-hidden="true">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+          </div>
+          <div class="pill">Notes</div>
+        </div>
+
+        <div class="search" aria-hidden="true">
+          <strong>Search</strong>
+          <span>⌘F</span>
+        </div>
+
+        <div class="notesHeader">
+          <h2>All Notes</h2>
+          <div class="pill">1</div>
+        </div>
+
+        <div class="noteCard" aria-label="Selected note">
+          <div class="logo" title="Pelican logo">
+            <!-- Put your pelican at: assets/pelican.png -->
+            <img src="assets/pelican.png" alt="Pelican logo" onerror="this.style.display='none'; this.parentElement.textContent='🪶';" />
+          </div>
+          <div class="noteMeta">
+            <div class="noteTitle">The 2nd International Symposium on Going Off</div>
+            <p class="notePreview">
+              Call for talks. Sunday, Feb 1 at 4:00 PM. Design District. Agenda mid-January.
+            </p>
+          </div>
+        </div>
+
+        <div class="sidebarFooter">
+          <div>cpenca</div>
+          <div id="todayStamp"></div>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main class="main">
+        <article class="paper" aria-label="Event note">
+          <div class="titleRow">
+            <div>
+              <h1>The 2nd International Symposium on Going Off</h1>
+              <p class="sub">
+                A small gathering in the spirit of serious play. If you want to give a talk, sign up below.
+              </p>
+
+              <div class="ctaRow">
+                <!-- TODO: Replace the # with your Google Form URL -->
+                <a class="btn primary" id="talkLink" href="#" target="_blank" rel="noopener">
+                  ✍️ Sign up to give a talk
+                </a>
+
+                <span class="menuWrap">
+                  <button class="btn" id="calBtn" type="button" aria-haspopup="true" aria-expanded="false">
+                    🗓️ Add to calendar
+                  </button>
+                  <div class="menu" id="calMenu" role="menu" aria-label="Calendar options">
+                    <a id="googleCalLink" href="#" target="_blank" rel="noopener" role="menuitem">
+                      Google Calendar
+                    </a>
+                    <a id="icsLink" href="#" download="GoingOff_Symposium.ics" role="menuitem">
+                      Download .ics (Apple / Outlook)
+                    </a>
+                  </div>
+                </span>
+              </div>
+
+              <div class="section">
+                <h3>Details</h3>
+                <div class="kvs">
+                  <div class="k">When</div>
+                  <div>Sunday, February 1, 4:00 PM</div>
+
+                  <div class="k">Where</div>
+                  <div>Design District — exact location announced soon</div>
+
+                  <div class="k">Agenda</div>
+                  <div>Will be posted mid-January.</div>
+                </div>
+              </div>
+
+              <div class="section">
+                <h3>Questions, comments?</h3>
+                <p>
+                  Email: <a href="#" id="emailLink">[loading]</a><br/>
+                  Instagram: <a href="https://instagram.com/cocopenca" target="_blank" rel="noopener">@cocopenca</a>
+                </p>
+                <div class="hint">
+                  (Email is assembled by the page to reduce spam scraping.)
+                </div>
+              </div>
+
+              <div class="section">
+                <h3>Hosting</h3>
+                <p>
+                  This page is designed for GitHub Pages. Put it in <span style="font-family:var(--mono);">cpenca.github.io</span> as <span style="font-family:var(--mono);">go_off.html</span>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </main>
+
+    </div>
+  </div>
+
+  <script>
+    // Stamp sidebar date
+    (function(){
+      const d = new Date();
+      const opts = { weekday:'short', month:'short', day:'numeric' };
+      const el = document.getElementById('todayStamp');
+      if (el) el.textContent = d.toLocaleDateString(undefined, opts);
+    })();
+
+    // ====== Configure these two values ======
+    // 1) Your Google Form link:
+    const GOOGLE_FORM_URL = "#"; // <- paste your form URL here
+    // 2) Event details:
+    const EVENT = {
+      title: "The 2nd International Symposium on Going Off",
+      // Local time in America/New_York (no timezone handling needed for basic links)
+      startLocal: "2026-02-01T16:00:00",
+      durationMinutes: 120,
+      location: "Design District (exact location announced soon)",
+      description: "Call for talks: sign up to give a talk. Agenda will be posted mid-January."
+    };
+
+    // Apply Google Form URL
+    const talkLink = document.getElementById("talkLink");
+    if (talkLink) talkLink.href = GOOGLE_FORM_URL;
+
+    // Calendar helpers
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function toUTCCompact(dt){
+      // dt is a Date in local time; output YYYYMMDDTHHMMSSZ
+      return dt.getUTCFullYear()
+        + pad(dt.getUTCMonth()+1)
+        + pad(dt.getUTCDate())
+        + "T"
+        + pad(dt.getUTCHours())
+        + pad(dt.getUTCMinutes())
+        + pad(dt.getUTCSeconds())
+        + "Z";
+    }
+
+    function addMinutes(date, minutes){
+      return new Date(date.getTime() + minutes * 60000);
+    }
+
+    function escapeICS(text){
+      return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/\n/g, "\\n")
+        .replace(/,/g, "\\,")
+        .replace(/;/g, "\\;");
+    }
+
+    // Build calendar links
+    (function(){
+      const start = new Date(EVENT.startLocal);
+      const end = addMinutes(start, EVENT.durationMinutes);
+
+      // Google Calendar link (UTC times)
+      const gBase = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+      const gDates = `${toUTCCompact(start)}/${toUTCCompact(end)}`;
+      const gParams = new URLSearchParams({
+        text: EVENT.title,
+        dates: gDates,
+        details: EVENT.description,
+        location: EVENT.location
+      });
+      const googleUrl = `${gBase}&${gParams.toString()}`;
+
+      const googleEl = document.getElementById("googleCalLink");
+      if (googleEl) googleEl.href = googleUrl;
+
+      // ICS file (simple, widely compatible)
+      const uid = `going-off-${Date.now()}@cpenca.github.io`;
+      const dtstamp = toUTCCompact(new Date());
+      const ics =
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//cpenca//Going Off Symposium//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:${uid}
+DTSTAMP:${dtstamp}
+DTSTART:${toUTCCompact(start)}
+DTEND:${toUTCCompact(end)}
+SUMMARY:${escapeICS(EVENT.title)}
+DESCRIPTION:${escapeICS(EVENT.description)}
+LOCATION:${escapeICS(EVENT.location)}
+END:VEVENT
+END:VCALENDAR`;
+
+      const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+
+      const icsEl = document.getElementById("icsLink");
+      if (icsEl) icsEl.href = url;
+    })();
+
+    // Calendar dropdown menu
+    (function(){
+      const btn = document.getElementById("calBtn");
+      const menu = document.getElementById("calMenu");
+      if (!btn || !menu) return;
+
+      function close(){
+        menu.style.display = "none";
+        btn.setAttribute("aria-expanded", "false");
+      }
+      function open(){
+        menu.style.display = "block";
+        btn.setAttribute("aria-expanded", "true");
+      }
+
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = btn.getAttribute("aria-expanded") === "true";
+        isOpen ? close() : open();
+      });
+
+      document.addEventListener("click", close);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") close();
+      });
+    })();
+
+    // Obfuscate email (reduce basic scraping)
+    (function(){
+      const user = "corypenca";
+      const domain = "gmail.com";
+      const addr = `${user}@${domain}`;
+      const a = document.getElementById("emailLink");
+      if (!a) return;
+      a.textContent = addr;
+      a.href = `mailto:${addr}`;
+      a.rel = "nofollow";
+    })();
+  </script>
 </body>
 </html>
